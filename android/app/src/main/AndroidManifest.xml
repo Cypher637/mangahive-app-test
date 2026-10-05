@@ -1,0 +1,29 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+    <application
+        android:allowBackup="false"
+        android:icon="@mipmap/ic_launcher"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:label="MangaHive"
+        android:usesCleartextTraffic="false"
+        android:networkSecurityConfig="@xml/network_security_config">
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:configChanges="orientation|screenSize|keyboardHidden">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <!-- The extension runtime. Third-party Source bytecode executes ONLY here, never in the UI process.
+             :mihon (same UID, separate process) rather than isolatedProcess: see MIHON_STAGE4_ISOLATION.md for the
+             decision and the threat model. Not exported: only this app can bind. -->
+        <service
+            android:name="app.mangahive.mihon.runtime.MihonExtensionService"
+            android:exported="false"
+            android:isolatedProcess="false"
+            android:process=":mihon" />
+    </application>
+</manifest>

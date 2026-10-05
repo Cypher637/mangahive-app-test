@@ -1,0 +1,114 @@
+{
+  "version": "phase0.2",
+  "tables": {
+    "messages": {
+      "policy": "rpc_only",
+      "rpc": [
+        "send_message",
+        "edit_message",
+        "delete_message"
+      ]
+    },
+    "room_messages": {
+      "policy": "rpc_only",
+      "rpc": [
+        "send_room_message",
+        "edit_room_message",
+        "delete_room_message"
+      ],
+      "access_model": "registry_public"
+    },
+    "posts": {
+      "policy": "rpc_only",
+      "rpc": [
+        "create_post",
+        "update_post",
+        "delete_post"
+      ]
+    },
+    "post_comments": {
+      "policy": "rpc_only",
+      "rpc": [
+        "add_post_comment"
+      ]
+    },
+    "post_likes": {
+      "policy": "rpc_only",
+      "rpc": [
+        "toggle_post_like"
+      ]
+    },
+    "reports": {
+      "policy": "rpc_only",
+      "rpc": [
+        "submit_report"
+      ]
+    },
+    "friend_requests": {
+      "policy": "rpc_only",
+      "rpc": [
+        "send_friend_request",
+        "accept_friend_request",
+        "decline_friend_request",
+        "cancel_friend_request",
+        "remove_friend"
+      ]
+    },
+    "blocks": {
+      "policy": "rpc_only",
+      "rpc": [
+        "block_user",
+        "unblock_user"
+      ]
+    },
+    "conversations": {
+      "policy": "rpc_only",
+      "rpc": [
+        "get_or_create_direct_conversation",
+        "create_group_conversation"
+      ]
+    },
+    "conversation_participants": {
+      "policy": "rpc_only",
+      "rpc": [
+        "add_group_member",
+        "leave_conversation"
+      ]
+    },
+    "message_reactions": {
+      "policy": "rpc_only",
+      "rpc": [
+        "toggle_message_reaction"
+      ]
+    },
+    "profiles": {
+      "policy": "rpc_only",
+      "rpc": [
+        "update_my_profile"
+      ]
+    },
+    "chapter_comments": {
+      "policy": "rpc_only",
+      "rpc": [
+        "sync_chapter_comment"
+      ]
+    },
+    "notifications": {
+      "policy": "rpc_only",
+      "rpc": [
+        "mark_notifications_read"
+      ]
+    },
+    "rooms": {
+      "policy": "rpc_only",
+      "rpc": [],
+      "access_model": "registry_public"
+    },
+    "follows": {
+      "policy": "rpc_only",
+      "rpc": [
+        "toggle_follow"
+      ]
+    }
+  }
+}

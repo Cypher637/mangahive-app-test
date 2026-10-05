@@ -1,0 +1,139 @@
+# PHASE 0 FINAL SECURITY + ARCHITECTURE FIX REPORT
+
+## 1. Executive Result
+
+**PHASE 0 — NOT READY**
+
+## 2. Critical Issues Fixed
+
+| Issue | How fixed |
+|-------|-----------|
+| Conversation self-join | New RLS policy: first participant must be self on empty conv; further inserts require existing participant. Helper `is_conversation_participant()`. |
+| Friend request ID rewrite | BEFORE UPDATE trigger freezes `requester_id`/`addressee_id`; status machine (pending→accepted/rejected by addressee; pending→cancelled by requester; terminal locked). |
+| Message reaction without membership | INSERT policy requires message → conversation → participant = auth.uid(). |
+| Message insert membership | Reinforced via `is_conversation_participant(conversation_id)`. |
+| Profile privacy document-only | `can_view_profile()` implements public / friends / private (followers/hidden treat as private until product phase). |
+| Rate limit not wired | Postgres `rate_limit_buckets` + `check_rate_limit` RPC; `src/services/social.js` calls RPC before mutations. |
+| Config abstraction dead | Contracts + classification retained; social service is the integration path for mutations. Full index.html constant removal still partial (compat). |
+| Contracts JSDoc-only | Added JSON Schema files under `contracts/schemas/`. |
+
+## 3. RLS Verification
+
+| Area | SQL implemented | Live multi-user test |
+|------|-----------------|----------------------|
+| profiles privacy | PASS | **BLOCKED** (no live DB) |
+| friend requests | PASS | **BLOCKED** |
+| conversations / participants | PASS | **BLOCKED** |
+| messages | PASS | **BLOCKED** |
+| reactions | PASS | **BLOCKED** |
+| reports | PASS (prior) | **BLOCKED** |
+
+Adversarial script: `supabase/tests/rls_adversarial.sql` (specification ready; not executed here).
+
+## 4. Rate Limiting
+
+- **Location:** `public.check_rate_limit` + `rate_limit_buckets`
+- **Storage:** Postgres (shared across instances)
+- **Integration:** `src/services/social.js` → `sb.rpc('check_rate_limit', …)` before friend/message/reaction/report ops
+- **Bypass:** Direct table access denied (RLS USING false); key is operation+user id
+- **Tests:** Unit tests on JS RateLimitService; RPC requires live DB
+
+## 5. Configuration
+
+- `contracts/config.js` classifies PUBLIC vs SECRET
+- Anon key remains public by design
+- No service_role assignment in client (static scan)
+- Hard-coded URL/anon still present in `index.html` for backward compatibility — **PARTIAL**
+
+## 6. Shared Contracts
+
+| Schema | Path |
+|--------|------|
+| ApiError | `contracts/schemas/error.schema.json` |
+| DownloadIdentity | `contracts/schemas/download_identity.schema.json` |
+| MangaSourceBinding | `contracts/schemas/manga_source_binding.schema.json` |
+| JS helpers | `contracts/ids.js`, `errors.js`, `rate_limit.js` |
+
+Consumed by Phase 0 tests; Android generation path not yet automated.
+
+## 7. Application Boundary
+
+`src/services/social.js` exposes:
+
+- sendFriendRequest / accept / reject / cancel
+- createConversation
+- sendMessage / reactToMessage
+- submitReport / blockUser
+
+UI should prefer these over raw `.from()` for new code. Existing index.html paths remain for compatibility until gradual migration.
+
+## 8. Data Ownership
+
+See `docs/PHASE0_DATA_OWNERSHIP.md`. Summary: social/messaging = server; library/progress/downloads/manga canonical = client-local in Phase 0 with stable IDs for future sync.
+
+## 9. Database Integrity
+
+- Friend request status check constraint
+- Immutable party trigger
+- Unique (requester, addressee)
+- Participant PK (conversation_id, user_id)
+- Reaction PK includes emoji
+- Rate limit bucket PK
+
+## 10. Android
+
+**BLOCKED** — Gradle 8.5 / Android SDK not available in this environment. Prior Stage 4/6 static Mihon tests PASS.
+
+## 11. Regression Results
+
+All previously green Stage 8–10.1 Node regressions remain applicable; critical SQL is additive. Phase 0 contract tests added.
+
+## 12. Second Audit (adversarial, static)
+
+| Scenario | Result |
+|----------|--------|
+| Self-join conversation via INSERT | Denied by new policy (SQL review) |
+| Rewrite friend request parties | Denied by trigger |
+| React without membership | Denied by new policy |
+| Direct rate_limit_buckets access | Denied by RLS |
+| service_role in client | Not present as assignment |
+
+Live exploitation tests: **BLOCKED** without DB.
+
+## 13. Remaining Blockers
+
+1. **Live RLS integration tests** against real Supabase with users A/B/C.
+2. **Android Gradle build** verification.
+3. **Gradual migration** of index.html social call sites to `MangaHiveSocial` service (optional for freeze if RLS holds).
+4. **Deploy migrations** to the production/staging Supabase project.
+
+## 14. Final Gate
+
+| # | Condition | Status |
+|---|-----------|--------|
+| 1 | Migrations reproducible | PASS |
+| 2 | RLS policies implemented | PASS |
+| 3 | Conversation membership cannot be bypassed | PASS (SQL) / live BLOCKED |
+| 4 | Friend request IDs immutable | PASS (SQL) / live BLOCKED |
+| 5 | Reactions require membership | PASS (SQL) / live BLOCKED |
+| 6 | Server-authoritative sensitive mutations | PASS (RLS+trigger) |
+| 7 | Privacy enforced or deferred explicitly | PASS (public/friends/private) |
+| 8 | Rate limiting wired | PASS (RPC + service) |
+| 9 | Shared store for rate limits | PASS (Postgres) |
+| 10 | Runtime config centralized | PARTIAL |
+| 11 | No private secrets in client | PASS |
+| 12 | Machine-readable contracts | PASS |
+| 13 | Service/API boundary | PASS (social.js) |
+| 14 | Data ownership documented | PASS |
+| 15 | DB integrity constraints | PASS |
+| 16 | Live RLS tests | **FAIL / BLOCKED** |
+| 17 | Android build | **BLOCKED** |
+| 18 | Security scan | PASS |
+| 19 | Full regression | PASS (Node) |
+| 20 | Second adversarial audit | PARTIAL (static only) |
+| 21 | Docs match implementation | PASS |
+| 22 | No known CRITICAL open in SQL | PASS |
+
+Because **#16** and **#17** are not satisfied with evidence, the only honest status is:
+
+**PHASE 0 — NOT READY**

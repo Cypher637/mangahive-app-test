@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mangahive.app/contracts/error.schema.json",
+  "title": "ApiError",
+  "type": "object",
+  "required": ["code", "message"],
+  "additionalProperties": false,
+  "properties": {
+    "code": {
+      "type": "string",
+      "enum": [
+        "VALIDATION_ERROR",
+        "AUTHENTICATION_REQUIRED",
+        "FORBIDDEN",
+        "NOT_FOUND",
+        "CONFLICT",
+        "RATE_LIMITED",
+        "SOURCE_ERROR",
+        "NETWORK_ERROR",
+        "EXTENSION_ERROR",
+        "INTERNAL_ERROR"
+      ]
+    },
+    "message": { "type": "string", "minLength": 1, "maxLength": 512 },
+    "details": { "type": "object" },
+    "requestId": { "type": "string", "maxLength": 64 }
+  }
+}

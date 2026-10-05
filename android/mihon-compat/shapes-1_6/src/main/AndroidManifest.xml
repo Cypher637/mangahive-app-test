@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Library module: exists only to type-check Source shapes against tachiyomix 1.6.
+     Not an extension, not installable. The extension-manifest contract it targets is in
+     MIHON_API_PROFILES.md (MIHON_1_6 entry point). -->
+<manifest />

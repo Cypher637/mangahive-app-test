@@ -1,0 +1,56 @@
+const fs = require('fs');
+const path = require('path');
+const root = __dirname;
+function rd(p){ return fs.readFileSync(path.join(root,p),'utf8'); }
+function ok(c,m){ if(!c) throw new Error('FAIL: '+m); console.log('PASS: '+m); }
+const rt=rd('android/mihon/src/main/java/app/mangahive/mihon/runtime/RuntimeEngine.kt');
+const reg=rd('android/mihon/src/main/java/app/mangahive/mihon/loader/MihonSourceRegistry.kt');
+const adapter=rd('android/mihon/src/main/java/app/mangahive/mihon/loader/MangaHiveSourceAdapter.kt');
+const health=rd('android/mihon/src/main/java/app/mangahive/mihon/loader/SourceHealthTracker.kt');
+const svc=rd('android/mihon/src/main/java/app/mangahive/mihon/runtime/MihonExtensionService.kt');
+const runtimeService=svc;
+const cache=rd('android/mihon/src/main/java/app/mangahive/mihon/runtime/SourceDataCache.kt');
+const ipcMessages=rd('android/mihon/src/main/java/app/mangahive/mihon/ipc/contract/IpcMessages.kt');
+const html=rd('index.html');
+const codeHtml=html.replace(/<!--[\s\S]*?-->/g,'').replace(/<script[^>]*>/gi,'').replace(/<\/script>/gi,'').replace(/\/\*[\s\S]*?\*\//g,'').replace(/(^|\s)\/\/.*$/gm,'$1');
+ok(fs.existsSync(path.join(root,'docs/STAGE8.md')),'STAGE8.md exists');
+ok(fs.existsSync(path.join(root,'docs/SOURCE_RUNTIME.md')),'SOURCE_RUNTIME.md exists');
+ok(fs.existsSync(path.join(root,'docs/SOURCE_REGISTRY.md')),'SOURCE_REGISTRY.md exists');
+ok(fs.existsSync(path.join(root,'docs/MIHON_RUNTIME.md')),'MIHON_RUNTIME.md exists');
+ok(fs.existsSync(path.join(root,'docs/SOURCE_DEVELOPMENT.md')),'SOURCE_DEVELOPMENT.md exists');
+ok(fs.existsSync(path.join(root,'docs/STAGE8_TESTING.md')),'STAGE8_TESTING.md exists');
+ok(/recoverEnabledExtensions\(\)/.test(rt)&&/engine\.recoverEnabledExtensions\(\)/.test(svc),'enabled extensions reload from persistent records at startup');
+ok(/SourceKey\.of\(extensionId, sourceId\)/.test(reg),'source identity is extensionId + sourceId');
+ok(/class SourceHealthTracker/.test(health)&&/cooldownMs/.test(health),'source health has bounded cooldown');
+ok(/detailsJson\(ctx, mangaRemoteId, mangaMemo\(mangaRemoteId\)\)/.test(adapter),'details forwards cached manga memo');
+ok(/chaptersJson\(ctx, mangaRemoteId, mangaMemo\(mangaRemoteId\)\)/.test(adapter),'chapters forwards manga memo');
+ok(/pagesJson\(ctx, chapterRemoteId, chapterMemo\(chapterRemoteId\)\)/.test(adapter),'pages forwards chapter memo');
+ok(/sortedWith\(compareBy<AdaptedChapter>/.test(adapter),'chapters use structured numeric ordering');
+ok(/sortedWith\(compareBy\(\{ it\.index \}/.test(adapter),'pages use stable page ordering');
+ok(/callSource\(req, token\)/.test(rt)&&/health\.success/.test(rt)&&/health\.failure/.test(rt),'source health surrounds real source calls');
+ok(/Install on Android/.test(html)&&/mihon-install-native/.test(html),'Source Hub exposes real Android installation');
+ok(/refreshMihonNativeSources/.test(html)&&/listSources/.test(html),'Source Hub discovers actual installed native sources');
+ok(/nativeKey/.test(html)&&/mihonStableSourceId/.test(html),'web source ids are namespaced without replacing native ids');
+ok(!/\beval\s*\(/.test(codeHtml)&&!/new\s+Function/.test(codeHtml),'web runtime still has no dynamic code execution');
+console.log('\nStage 8 source-runtime regression checks passed.');
+
+// Stage 8.1 stabilization: page calls must use the native numeric source identity, not the web namespace id.
+ok(/pages:\s*function\(seriesRemoteId, chapterRemoteId, sig\)\{[\s\S]*?sourceId:\s*runtimeSourceId/.test(html), 'Mihon page bridge uses native runtime source id');
+const bridgeStart=html.indexOf('function createMihonBridgeAdapter'); const bridgeEnd=html.indexOf('/* ── Multi-source intelligence', bridgeStart); const bridge=html.slice(bridgeStart, bridgeEnd);
+ok(!/sourceId:\s*sourceId/.test(bridge), 'Mihon page bridge does not regress to web source id');
+ok(/function mihonStableSourceId[\s\S]*?function hex\(s\)/.test(html), 'Mihon web source ids use collision-resistant complete identity encoding');
+ok(!/mihonStableSourceId[\s\S]*?Math\.imul\(h, 16777619\)/.test(html), 'Mihon web source ids no longer use 32-bit FNV hashing');
+ok(/mihon_source_cache/.test(runtimeService), 'persistent Mihon source-data cache is wired into Android runtime');
+ok(/class SourceDataCache/.test(cache), 'persistent source-data cache exists');
+ok(/persistenceFile: File\?/.test(health), 'source health supports persistent storage');
+ok(/healthStatus/.test(ipcMessages) && /cooldownUntil/.test(ipcMessages), 'source health is exposed over native IPC');
+ok(/sourceHubMihonUpdates/.test(html) && /mihon-update-native/.test(html), 'Mihon repository update detection and native update action exist');
+ok(!/onUninstall\(rec\.extensionId, req\.requestId\).*sourceCache\.clearExtension/.test(rt), 'uninstall does not erase cached source data');
+ok(/replaceExtension[\s\S]*signersByExtension\[extensionId\]/.test(reg) && !/replaceExtension[\s\S]*health\.clearExtension/.test(reg), 'source health survives extension source replacement/reload');
+ok(/search:\s*function\(q, sig, page\)[\s\S]*extensionId:\s*extensionId[\s\S]*page:/.test(bridge), 'Mihon search bridge sends typed extension id and page');
+ok(/details[\s\S]*extensionId:\s*extensionId[\s\S]*mangaRemoteId:/.test(bridge), 'Mihon details bridge sends typed manga remote id');
+ok(/chapters[\s\S]*extensionId:\s*extensionId[\s\S]*mangaRemoteId:/.test(bridge), 'Mihon chapters bridge sends typed manga remote id');
+ok(/pages[\s\S]*extensionId:\s*extensionId[\s\S]*chapterRemoteId:/.test(bridge), 'Mihon pages bridge sends typed chapter remote id');
+ok(!/mihonNativeInvoke\("(?:search|details|chapters|pages)"[\s\S]*packageId:/.test(bridge), 'Mihon source calls do not send packageId to typed runtime');
+ok(/mihonNativeInvoke\("install", \{ apkUrl:[\s\S]*expectedPackage:/.test(html), 'Mihon install/update sends expectedPackage contract field');
+ok(!/mihonNativeInvoke\("install", \{[\s\S]*expectedCertSha256:/.test(html), 'Mihon install/update does not send obsolete expectedCertSha256 field');

@@ -1,0 +1,14 @@
+{
+  "repositoryApiVersion": 1,
+  "name": "Example Community Repository",
+  "extensions": [
+    {
+      "id": "community.test-extension",
+      "name": "MangaHive Test Extension",
+      "version": "1.0.0",
+      "download": null,
+      "manifest": null,
+      "signature": null
+    }
+  ]
+}

@@ -1,0 +1,61 @@
+{
+  "manifestVersion": 1,
+  "id": "community.test-extension",
+  "name": "MangaHive Test Extension",
+  "version": "1.0.0",
+  "apiVersion": 1,
+  "author": "MangaHive",
+  "description": "Harmless static-catalog extension proving dynamic source registration.",
+  "license": "MIT",
+  "permissions": [
+    "network",
+    "storage"
+  ],
+  "capabilities": [
+    "search",
+    "details",
+    "chapters",
+    "pages"
+  ],
+  "contentTypes": [
+    "manga"
+  ],
+  "languages": [
+    "en"
+  ],
+  "sources": [
+    {
+      "id": "mh-test-source",
+      "name": "MH Test Source",
+      "type": "manga",
+      "capabilities": [
+        "search",
+        "details",
+        "chapters",
+        "pages"
+      ],
+      "engine": {
+        "type": "static-catalog",
+        "catalog": [
+          {
+            "remoteId": "test-one",
+            "title": "MangaHive Extension Probe",
+            "chapters": [
+              {
+                "remoteId": "c1",
+                "title": "Chapter 1",
+                "chapter": 1,
+                "pages": [
+                  "https://via.placeholder.com/600x900.png?text=MH+Test+Page+1",
+                  "https://via.placeholder.com/600x900.png?text=MH+Test+Page+2"
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "signature": null,
+  "signingKeyId": null
+}

@@ -1,0 +1,1019 @@
+{
+  "version": "phase0.8-2026-10-04",
+  "rpcs": {
+    "send_message": {
+      "args": [
+        "p_conversation_id",
+        "p_body",
+        "p_reply_to_message_id"
+      ],
+      "required": [
+        "p_conversation_id",
+        "p_body"
+      ],
+      "arg_types": {
+        "p_conversation_id": "uuid",
+        "p_body": "text",
+        "p_reply_to_message_id": "uuid"
+      },
+      "signature": "send_message(uuid,text,uuid)",
+      "returns": "jsonb",
+      "kind": "mutation",
+      "auth": "authenticated",
+      "auth_enforcement": "guard",
+      "security_definer": true,
+      "client_callable": true,
+      "rate_limit": "send_message"
+    },
+    "delete_message": {
+      "args": [
+        "p_message_id"
+      ],
+      "required": [
+        "p_message_id"
+      ],
+      "arg_types": {
+        "p_message_id": "uuid"
+      },
+      "signature": "delete_message(uuid)",
+      "returns": "jsonb",
+      "kind": "mutation",
+      "auth": "authenticated",
+      "auth_enforcement": "guard",
+      "security_definer": true,
+      "client_callable": true,
+      "rate_limit": null,
+      "rate_limit_reason": "not required or covered by sibling op"
+    },
+    "create_post": {
+      "args": [
+        "p_body",
+        "p_image_url",
+        "p_series_id",
+        "p_series_title",
+        "p_source",
+        "p_remote_id",
+        "p_cover_url",
+        "p_spoiler"
+      ],
+      "required": [],
+      "arg_types": {
+        "p_body": "text",
+        "p_image_url": "text",
+        "p_series_id": "text",
+        "p_series_title": "text",
+        "p_source": "text",
+        "p_remote_id": "text",
+        "p_cover_url": "text",
+        "p_spoiler": "boolean"
+      },
+      "signature": "create_post(text,text,text,text,text,text,text,boolean)",
+      "returns": "jsonb",
+      "kind": "mutation",
+      "auth": "authenticated",
+      "auth_enforcement": "guard",
+      "security_definer": true,
+      "client_callable": true,
+      "rate_limit": "post_create",
+      "touched_tables": [
+        "posts"
+      ]
+    },
+    "add_post_comment": {
+      "args": [
+        "p_post_id",
+        "p_body"
+      ],
+      "required": [
+        "p_post_id",
+        "p_body"
+      ],
+      "arg_types": {
+        "p_post_id": "uuid",
+        "p_body": "text"
+      },
+      "signature": "add_post_comment(uuid,text)",
+      "returns": "jsonb",
+      "kind": "mutation",
+      "auth": "authenticated",
+      "auth_enforcement": "guard",
+      "security_definer": true,
+      "client_callable": true,
+      "rate_limit": "post_comment"
+    },
+    "toggle_post_like": {
+      "args": [
+        "p_post_id"
+      ],
+      "required": [
+        "p_post_id"
+      ],
+      "arg_types": {
+        "p_post_id": "uuid"
+      },
+      "signature": "toggle_post_like(uuid)",
+      "returns": "jsonb",
+      "kind": "mutation",
+      "auth": "authenticated",
+      "auth_enforcement": "guard",
+      "security_definer": true,
+      "client_callable": true,
+      "rate_limit": "post_like"
+    },
+    "submit_report": {
+      "args": [
+        "p_target_type",
+        "p_target_id",
+        "p_reason",
+        "p_details"
+      ],
+      "required": [
+        "p_target_type",
+        "p_target_id",
+        "p_reason"
+      ],
+      "arg_types": {
+        "p_target_type": "text",
+        "p_target_id": "text",
+        "p_reason": "text",
+        "p_details": "text"
+      },
+      "signature": "submit_report(text,text,text,text)",
+      "returns": "jsonb",
+      "kind": "mutation",
+      "auth": "authenticated",
+      "auth_enforcement": "guard",
+      "security_definer": true,
+      "client_callable": true,
+      "rate_limit": "report"
+    },
+    "send_friend_request": {
+      "args": [
+        "p_addressee"
+      ],
+      "required": [
+        "p_addressee"
+      ],
+      "arg_types": {
+        "p_addressee": "uuid"
+      },
+      "signature": "send_friend_request(uuid)",
+      "returns": "jsonb",
+      "kind": "mutation",
+      "auth": "authenticated",
+      "auth_enforcement": "guard",
+      "security_definer": true,
+      "client_callable": true,
+      "rate_limit": "friend_request"
+    },
+    "accept_friend_request": {
+      "args": [
+        "p_request_id"
+      ],
+      "required": [
+        "p_request_id"
+      ],
+      "arg_types": {
+        "p_request_id": "uuid"
+      },
+      "signature": "accept_friend_request(uuid)",
+      "returns": "jsonb",
+      "kind": "mutation",
+      "auth": "authenticated",
+      "auth_enforcement": "guard",
+      "security_definer": true,
+      "client_callable": true,
+      "rate_limit": "accept_friend_request"
+    },
+    "decline_friend_request": {
+      "args": [
+        "p_request_id"
+      ],
+      "required": [
+        "p_request_id"
+      ],
+      "arg_types": {
+        "p_request_id": "uuid"
+      },
+      "signature": "decline_friend_request(uuid)",
+      "returns": "jsonb",
+      "kind": "mutation",
+      "auth": "authenticated",
+      "auth_enforcement": "guard",
+      "security_definer": true,
+      "client_callable": true,
+      "rate_limit": null,
+      "rate_limit_reason": "not required or covered by sibling op"
+    },
+    "cancel_friend_request": {
+      "args": [
+        "p_request_id"
+      ],
+      "required": [
+        "p_request_id"
+      ],
+      "arg_types": {
+        "p_request_id": "uuid"
+      },
+      "signature": "cancel_friend_request(uuid)",
+      "returns": "jsonb",
+      "kind": "mutation",
+      "auth": "authenticated",
+      "auth_enforcement": "guard",
+      "security_definer": true,
+      "client_callable": true,
+      "rate_limit": null,
+      "rate_limit_reason": "not required or covered by sibling op"
+    },
+    "remove_friend": {
+      "args": [
+        "p_other_user_id"
+      ],
+      "required": [
+        "p_other_user_id"
+      ],
+      "arg_types": {
+        "p_other_user_id": "uuid"
+      },
+      "signature": "remove_friend(uuid)",
+      "returns": "jsonb",
+      "kind": "mutation",
+      "auth": "authenticated",
+      "auth_enforcement": "guard",
+      "security_definer": true,
+      "client_callable": true,
+      "rate_limit": null,
+      "rate_limit_reason": "not required or covered by sibling op"
+    },
+    "block_user": {
+      "args": [
+        "p_blocked"
+      ],
+      "required": [
+        "p_blocked"
+      ],
+      "arg_types": {
+        "p_blocked": "uuid"
+      },
+      "signature": "block_user(uuid)",
+      "returns": "jsonb",
+      "kind": "mutation",
+      "auth": "authenticated",
+      "auth_enforcement": "guard",
+      "security_definer": true,
+      "client_callable": true,
+      "rate_limit": "block"
+    },
+    "toggle_follow": {
+      "args": [
+        "p_target"
+      ],
+      "required": [
+        "p_target"
+      ],
+      "arg_types": {
+        "p_target": "uuid"
+      },
+      "signature": "toggle_follow(uuid)",
+      "returns": "jsonb",
+      "kind": "mutation",
+      "auth": "authenticated",
+      "auth_enforcement": "guard",
+      "security_definer": true,
+      "client_callable": true,
+      "rate_limit": "follow",
+      "touched_tables": [
+        "follows"
+      ]
+    },
+    "toggle_message_reaction": {
+      "args": [
+        "p_kind",
+        "p_message_id",
+        "p_emoji",
+        "p_adding"
+      ],
+      "required": [
+        "p_kind",
+        "p_message_id",
+        "p_emoji"
+      ],
+      "arg_types": {
+        "p_kind": "text",
+        "p_message_id": "uuid",
+        "p_emoji": "text",
+        "p_adding": "boolean"
+      },
+      "signature": "toggle_message_reaction(text,uuid,text,boolean)",
+      "returns": "jsonb",
+      "kind": "mutation",
+      "auth": "authenticated",
+      "auth_enforcement": "guard",
+      "security_definer": true,
+      "client_callable": true,
+      "rate_limit": "message_reaction"
+    },
+    "get_or_create_direct_conversation": {
+      "args": [
+        "other_user_id"
+      ],
+      "required": [
+        "other_user_id"
+      ],
+      "arg_types": {
+        "other_user_id": "uuid"
+      },
+      "signature": "get_or_create_direct_conversation(uuid)",
+      "returns": "uuid",
+      "kind": "mutation",
+      "auth": "authenticated",
+      "auth_enforcement": "guard",
+      "security_definer": true,
+      "client_callable": true,
+      "rate_limit": "conversation_create"
+    },
+    "create_group_conversation": {
+      "args": [
+        "group_name",
+        "member_ids"
+      ],
+      "required": [
+        "group_name",
+        "member_ids"
+      ],
+      "arg_types": {
+        "group_name": "text",
+        "member_ids": "uuid[]"
+      },
+      "signature": "create_group_conversation(text,uuid[])",
+      "returns": "uuid",
+      "kind": "mutation",
+      "auth": "authenticated",
+      "auth_enforcement": "guard",
+      "security_definer": true,
+      "client_callable": true,
+      "rate_limit": "conversation_create",
+      "rate_limit_reason": "not required or covered by sibling op"
+    },
+    "add_group_member": {
+      "args": [
+        "p_conversation_id",
+        "p_user_id"
+      ],
+      "required": [
+        "p_conversation_id",
+        "p_user_id"
+      ],
+      "arg_types": {
+        "p_conversation_id": "uuid",
+        "p_user_id": "uuid"
+      },
+      "signature": "add_group_member(uuid,uuid)",
+      "returns": "jsonb",
+      "kind": "mutation",
+      "auth": "authenticated",
+      "auth_enforcement": "guard",
+      "security_definer": true,
+      "client_callable": true,
+      "rate_limit": "group_member_add",
+      "rate_limit_reason": "not required or covered by sibling op"
+    },
+    "leave_conversation": {
+      "args": [
+        "p_conversation_id"
+      ],
+      "required": [
+        "p_conversation_id"
+      ],
+      "arg_types": {
+        "p_conversation_id": "uuid"
+      },
+      "signature": "leave_conversation(uuid)",
+      "returns": "jsonb",
+      "kind": "mutation",
+      "auth": "authenticated",
+      "auth_enforcement": "guard",
+      "security_definer": true,
+      "client_callable": true,
+      "rate_limit": null,
+      "rate_limit_reason": "not required or covered by sibling op"
+    },
+    "get_public_profile": {
+      "args": [
+        "target_id",
+        "target_name"
+      ],
+      "required": [],
+      "arg_types": {
+        "target_id": "uuid",
+        "target_name": "text"
+      },
+      "signature": "get_public_profile(uuid,text)",
+      "returns": "jsonb",
+      "kind": "read_only",
+      "auth": "authenticated",
+      "auth_enforcement": "guard",
+      "security_definer": true,
+      "client_callable": true,
+      "rate_limit": null,
+      "rate_limit_reason": "not required or covered by sibling op"
+    },
+    "sync_chapter_comment": {
+      "args": [
+        "p_client_id",
+        "p_series_id",
+        "p_chapter_id",
+        "p_body",
+        "p_spoiler"
+      ],
+      "required": [
+        "p_client_id",
+        "p_series_id",
+        "p_chapter_id",
+        "p_body"
+      ],
+      "arg_types": {
+        "p_client_id": "text",
+        "p_series_id": "text",
+        "p_chapter_id": "text",
+        "p_body": "text",
+        "p_spoiler": "boolean"
+      },
+      "signature": "sync_chapter_comment(text,text,text,text,boolean)",
+      "returns": "jsonb",
+      "kind": "mutation",
+      "auth": "authenticated",
+      "auth_enforcement": "guard",
+      "security_definer": true,
+      "client_callable": true,
+      "rate_limit": "chapter_comment"
+    },
+    "check_rate_limit": {
+      "args": [
+        "p_operation"
+      ],
+      "required": [
+        "p_operation"
+      ],
+      "arg_types": {
+        "p_operation": "text"
+      },
+      "signature": "check_rate_limit(text)",
+      "returns": "jsonb",
+      "kind": "mutation",
+      "auth": "authenticated",
+      "auth_enforcement": "guard",
+      "security_definer": true,
+      "client_callable": true,
+      "rate_limit": null,
+      "rate_limit_reason": "is the rate-limit authority itself: upserts the caller's own bucket in rate_limit_buckets",
+      "side_effects": [
+        "rate_limit_buckets"
+      ]
+    },
+    "delete_post": {
+      "args": [
+        "p_post_id"
+      ],
+      "required": [
+        "p_post_id"
+      ],
+      "arg_types": {
+        "p_post_id": "uuid"
+      },
+      "signature": "delete_post(uuid)",
+      "returns": "jsonb",
+      "kind": "mutation",
+      "auth": "authenticated",
+      "auth_enforcement": "guard",
+      "security_definer": true,
+      "client_callable": true,
+      "rate_limit": null,
+      "rate_limit_reason": "not required or covered by sibling op"
+    },
+    "update_post": {
+      "args": [
+        "p_post_id",
+        "p_body",
+        "p_spoiler",
+        "p_image_url"
+      ],
+      "required": [
+        "p_post_id"
+      ],
+      "arg_types": {
+        "p_post_id": "uuid",
+        "p_body": "text",
+        "p_spoiler": "boolean",
+        "p_image_url": "text"
+      },
+      "signature": "update_post(uuid,text,boolean,text)",
+      "returns": "jsonb",
+      "kind": "mutation",
+      "auth": "authenticated",
+      "auth_enforcement": "guard",
+      "security_definer": true,
+      "client_callable": true,
+      "rate_limit": null,
+      "rate_limit_reason": "not required or covered by sibling op"
+    },
+    "unblock_user": {
+      "args": [
+        "p_blocked_user_id"
+      ],
+      "required": [
+        "p_blocked_user_id"
+      ],
+      "arg_types": {
+        "p_blocked_user_id": "uuid"
+      },
+      "signature": "unblock_user(uuid)",
+      "returns": "jsonb",
+      "kind": "mutation",
+      "auth": "authenticated",
+      "auth_enforcement": "guard",
+      "security_definer": true,
+      "client_callable": true,
+      "rate_limit": null,
+      "rate_limit_reason": "not required or covered by sibling op"
+    },
+    "update_my_profile": {
+      "args": [
+        "p_patch"
+      ],
+      "required": [
+        "p_patch"
+      ],
+      "arg_types": {
+        "p_patch": "jsonb"
+      },
+      "signature": "update_my_profile(jsonb)",
+      "returns": "jsonb",
+      "kind": "mutation",
+      "auth": "authenticated",
+      "auth_enforcement": "guard",
+      "security_definer": true,
+      "client_callable": true,
+      "rate_limit": null,
+      "rate_limit_reason": "self profile update",
+      "touched_tables": [
+        "profiles"
+      ],
+      "patch_semantics": {
+        "missing_key": "preserve",
+        "null": "clear",
+        "value": "set",
+        "empty_string": "INVALID_INPUT for username/name/avatar; bio allows empty after trim",
+        "unknown_keys": "reject"
+      }
+    },
+    "send_room_message": {
+      "args": [
+        "p_room_id",
+        "p_body"
+      ],
+      "required": [
+        "p_room_id",
+        "p_body"
+      ],
+      "arg_types": {
+        "p_room_id": "text",
+        "p_body": "text"
+      },
+      "signature": "send_room_message(text,text)",
+      "returns": "jsonb",
+      "kind": "mutation",
+      "auth": "authenticated",
+      "auth_enforcement": "guard",
+      "security_definer": true,
+      "client_callable": true,
+      "rate_limit": "send_message"
+    },
+    "delete_room_message": {
+      "args": [
+        "p_message_id"
+      ],
+      "required": [
+        "p_message_id"
+      ],
+      "arg_types": {
+        "p_message_id": "uuid"
+      },
+      "signature": "delete_room_message(uuid)",
+      "returns": "jsonb",
+      "kind": "mutation",
+      "auth": "authenticated",
+      "auth_enforcement": "guard",
+      "security_definer": true,
+      "client_callable": true,
+      "rate_limit": null,
+      "rate_limit_reason": "not required or covered by sibling op"
+    },
+    "edit_message": {
+      "args": [
+        "p_message_id",
+        "p_body"
+      ],
+      "required": [
+        "p_message_id",
+        "p_body"
+      ],
+      "arg_types": {
+        "p_message_id": "uuid",
+        "p_body": "text"
+      },
+      "signature": "edit_message(uuid,text)",
+      "returns": "jsonb",
+      "kind": "mutation",
+      "auth": "authenticated",
+      "auth_enforcement": "guard",
+      "security_definer": true,
+      "client_callable": true,
+      "rate_limit": "send_message",
+      "rate_limit_reason": "shares send_message bucket intentionally"
+    },
+    "edit_room_message": {
+      "args": [
+        "p_message_id",
+        "p_body"
+      ],
+      "required": [
+        "p_message_id",
+        "p_body"
+      ],
+      "arg_types": {
+        "p_message_id": "uuid",
+        "p_body": "text"
+      },
+      "signature": "edit_room_message(uuid,text)",
+      "returns": "jsonb",
+      "kind": "mutation",
+      "auth": "authenticated",
+      "auth_enforcement": "guard",
+      "security_definer": true,
+      "client_callable": true,
+      "rate_limit": "send_message",
+      "rate_limit_reason": "shares send_message bucket intentionally"
+    },
+    "rename_group": {
+      "args": [
+        "p_conversation_id",
+        "p_name"
+      ],
+      "required": [
+        "p_conversation_id",
+        "p_name"
+      ],
+      "arg_types": {
+        "p_conversation_id": "uuid",
+        "p_name": "text"
+      },
+      "signature": "rename_group(uuid,text)",
+      "returns": "jsonb",
+      "kind": "mutation",
+      "auth": "authenticated",
+      "auth_enforcement": "guard",
+      "security_definer": true,
+      "client_callable": true,
+      "rate_limit": null,
+      "rate_limit_reason": "low-volume group admin"
+    },
+    "mark_notifications_read": {
+      "args": [
+        "p_ids"
+      ],
+      "required": [],
+      "arg_types": {
+        "p_ids": "uuid[]"
+      },
+      "signature": "mark_notifications_read(uuid[])",
+      "returns": "jsonb",
+      "kind": "mutation",
+      "auth": "authenticated",
+      "auth_enforcement": "guard",
+      "security_definer": true,
+      "client_callable": true,
+      "rate_limit": null,
+      "rate_limit_reason": "self-only notification state",
+      "touched_tables": [
+        "notifications"
+      ]
+    },
+    "delete_declined_message_request": {
+      "args": [
+        "p_conversation_id"
+      ],
+      "required": [
+        "p_conversation_id"
+      ],
+      "arg_types": {
+        "p_conversation_id": "uuid"
+      },
+      "signature": "delete_declined_message_request(uuid)",
+      "returns": "jsonb",
+      "kind": "mutation",
+      "auth": "authenticated",
+      "auth_enforcement": "guard",
+      "security_definer": true,
+      "client_callable": true,
+      "rate_limit": null,
+      "rate_limit_reason": "cleanup after decline"
+    },
+    "accept_message_request": {
+      "args": [
+        "p_conversation_id"
+      ],
+      "required": [
+        "p_conversation_id"
+      ],
+      "arg_types": {
+        "p_conversation_id": "uuid"
+      },
+      "signature": "accept_message_request(uuid)",
+      "returns": "jsonb",
+      "kind": "read_only",
+      "auth": "authenticated",
+      "auth_enforcement": "guard",
+      "security_definer": true,
+      "client_callable": true,
+      "rate_limit": null,
+      "behavior_note": "Final SQL validates auth + membership and returns {ok:true}; it performs no state change (functional stub, not a security gap). Classified by observed effect."
+    },
+    "decline_message_request": {
+      "args": [
+        "p_conversation_id"
+      ],
+      "required": [
+        "p_conversation_id"
+      ],
+      "arg_types": {
+        "p_conversation_id": "uuid"
+      },
+      "signature": "decline_message_request(uuid)",
+      "returns": "jsonb",
+      "kind": "read_only",
+      "auth": "authenticated",
+      "auth_enforcement": "guard",
+      "security_definer": true,
+      "client_callable": true,
+      "rate_limit": null,
+      "behavior_note": "Final SQL validates auth + membership and returns {ok:true}; it performs no state change (functional stub, not a security gap). Classified by observed effect."
+    },
+    "get_my_profile": {
+      "args": [],
+      "required": [],
+      "arg_types": {},
+      "signature": "get_my_profile()",
+      "returns": "jsonb",
+      "kind": "read_only",
+      "auth": "authenticated",
+      "auth_enforcement": "guard",
+      "security_definer": true,
+      "client_callable": true,
+      "rate_limit": null,
+      "rate_limit_reason": "read"
+    },
+    "search_profiles": {
+      "args": [
+        "q"
+      ],
+      "required": [
+        "q"
+      ],
+      "arg_types": {
+        "q": "text"
+      },
+      "signature": "search_profiles(text)",
+      "returns": "setof profiles",
+      "kind": "read_only",
+      "auth": "authenticated",
+      "auth_enforcement": "guard",
+      "security_definer": true,
+      "client_callable": true,
+      "rate_limit": "search"
+    },
+    "is_name_available": {
+      "args": [
+        "candidate",
+        "include_username"
+      ],
+      "required": [
+        "candidate"
+      ],
+      "arg_types": {
+        "candidate": "text",
+        "include_username": "boolean"
+      },
+      "signature": "is_name_available(text,boolean)",
+      "returns": "boolean",
+      "kind": "read_only",
+      "auth": "authenticated",
+      "auth_enforcement": "acl_only",
+      "security_definer": true,
+      "client_callable": true,
+      "rate_limit": null,
+      "rate_limit_reason": "availability check"
+    },
+    "conversation_last_messages": {
+      "args": [
+        "p_ids"
+      ],
+      "required": [
+        "p_ids"
+      ],
+      "arg_types": {
+        "p_ids": "uuid[]"
+      },
+      "signature": "conversation_last_messages(uuid[])",
+      "returns": "table(conversation_id uuid, body text, user_id uuid, created_at timestamp with time zone)",
+      "kind": "read_only",
+      "auth": "authenticated",
+      "auth_enforcement": "guard",
+      "security_definer": true,
+      "client_callable": true,
+      "rate_limit": null,
+      "rate_limit_reason": "read"
+    },
+    "app_schema_version": {
+      "args": [],
+      "required": [],
+      "arg_types": {},
+      "signature": "app_schema_version()",
+      "returns": "text",
+      "kind": "read_only",
+      "auth": "public",
+      "auth_enforcement": "public",
+      "security_definer": true,
+      "client_callable": true,
+      "public_execute": true,
+      "rate_limit": null,
+      "rate_limit_reason": "read-only public",
+      "reason": "schema version probe for client compatibility"
+    }
+  },
+  "internal_helpers": {
+    "require_rate_limit": {
+      "args": [
+        "p_operation"
+      ],
+      "required": [
+        "p_operation"
+      ],
+      "arg_types": {
+        "p_operation": "text"
+      },
+      "signature": "require_rate_limit(text)",
+      "returns": "void",
+      "security_definer": true,
+      "client_callable": false,
+      "kind": "mutation",
+      "reason": "internal: called only from SECURITY DEFINER RPCs; EXECUTE revoked from PUBLIC, anon, authenticated"
+    },
+    "room_is_accessible": {
+      "args": [
+        "p_room_id"
+      ],
+      "required": [
+        "p_room_id"
+      ],
+      "arg_types": {
+        "p_room_id": "text"
+      },
+      "signature": "room_is_accessible(text)",
+      "returns": "boolean",
+      "security_definer": true,
+      "client_callable": false,
+      "kind": "read_only",
+      "reason": "internal: called only from SECURITY DEFINER room RPCs; EXECUTE revoked from PUBLIC, anon, authenticated; NOT referenced by any RLS policy (inlined into room_messages/room_msg_select in 0.8 because policy functions run with the caller's EXECUTE privilege and a grant would expose it via PostgREST /rpc)",
+      "rls_policy_use": "forbidden"
+    }
+  },
+  "rls_predicates": {
+    "is_conversation_participant": {
+      "args": [
+        "cid"
+      ],
+      "required": [
+        "cid"
+      ],
+      "arg_types": {
+        "cid": "uuid"
+      },
+      "signature": "is_conversation_participant(uuid)",
+      "returns": "boolean",
+      "security_definer": true,
+      "client_callable": true,
+      "kind": "read_only",
+      "auth": "authenticated",
+      "reason": "RLS policy predicate (all policies using it are TO authenticated); needs EXECUTE for authenticated only; PUBLIC and anon must be revoked"
+    },
+    "can_view_profile": {
+      "args": [
+        "target",
+        "privacy"
+      ],
+      "required": [
+        "target",
+        "privacy"
+      ],
+      "arg_types": {
+        "target": "uuid",
+        "privacy": "text"
+      },
+      "signature": "can_view_profile(uuid,text)",
+      "returns": "boolean",
+      "security_definer": true,
+      "client_callable": true,
+      "kind": "read_only",
+      "auth": "authenticated",
+      "reason": "RLS policy predicate (all policies using it are TO authenticated); needs EXECUTE for authenticated only; PUBLIC and anon must be revoked"
+    },
+    "can_manage_participants": {
+      "args": [
+        "cid"
+      ],
+      "required": [
+        "cid"
+      ],
+      "arg_types": {
+        "cid": "uuid"
+      },
+      "signature": "can_manage_participants(uuid)",
+      "returns": "boolean",
+      "security_definer": true,
+      "client_callable": true,
+      "kind": "read_only",
+      "auth": "authenticated",
+      "reason": "RLS policy predicate (all policies using it are TO authenticated); needs EXECUTE for authenticated only; PUBLIC and anon must be revoked"
+    }
+  },
+  "trigger_functions": {
+    "friend_request_guard": {
+      "args": [],
+      "required": [],
+      "arg_types": {},
+      "signature": "friend_request_guard()",
+      "returns": "trigger",
+      "security_definer": true,
+      "client_callable": false,
+      "reason": "RETURNS trigger: PostgreSQL refuses direct calls and PostgREST does not expose it as an RPC"
+    },
+    "conversations_set_creator": {
+      "args": [],
+      "required": [],
+      "arg_types": {},
+      "signature": "conversations_set_creator()",
+      "returns": "trigger",
+      "security_definer": true,
+      "client_callable": false,
+      "reason": "RETURNS trigger: PostgreSQL refuses direct calls and PostgREST does not expose it as an RPC"
+    },
+    "conversations_freeze_creator": {
+      "args": [],
+      "required": [],
+      "arg_types": {},
+      "signature": "conversations_freeze_creator()",
+      "returns": "trigger",
+      "security_definer": true,
+      "client_callable": false,
+      "reason": "RETURNS trigger: PostgreSQL refuses direct calls and PostgREST does not expose it as an RPC"
+    }
+  },
+  "obsolete_signatures": [
+    {
+      "signature": "block_user_by_target(uuid)",
+      "created_in": "20261004030000_phase0_authoritative_mutations.sql",
+      "dropped_in": "20261004050000_phase0_2_edit_and_cleanup.sql:59"
+    },
+    {
+      "signature": "check_rate_limit(text,integer,integer,integer)",
+      "created_in": "20261004010000_phase0_critical_rls_hardening.sql",
+      "dropped_in": "20261004020000_phase0_rpcs_and_rate_limit_authority.sql:135"
+    },
+    {
+      "signature": "create_post(text,text,boolean,uuid,text,text,text,text)",
+      "created_in": "20261004070000_phase0_4_security_and_verification_closure.sql",
+      "dropped_in": "20261004080000_phase0_5_contract_and_privileges.sql:8"
+    },
+    {
+      "signature": "get_public_profile(uuid)",
+      "created_in": "20261004020000_phase0_rpcs_and_rate_limit_authority.sql",
+      "dropped_in": "20261004050000_phase0_2_edit_and_cleanup.sql:60"
+    },
+    {
+      "signature": "sync_chapter_comment(text,text,text,boolean)",
+      "created_in": "20261004020000_phase0_rpcs_and_rate_limit_authority.sql",
+      "dropped_in": "20261004050000_phase0_2_edit_and_cleanup.sql:61"
+    },
+    {
+      "signature": "toggle_message_reaction(uuid,text)",
+      "created_in": "20261004020000_phase0_rpcs_and_rate_limit_authority.sql",
+      "dropped_in": "20261004050000_phase0_2_edit_and_cleanup.sql:58"
+    },
+    {
+      "signature": "update_my_profile(text,text,text,text,text)",
+      "created_in": "20261004040000_phase0_1_mutation_closure.sql",
+      "dropped_in": "20261004080000_phase0_5_contract_and_privileges.sql:68"
+    }
+  ]
+}

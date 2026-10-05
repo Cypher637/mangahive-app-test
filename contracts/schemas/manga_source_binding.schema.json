@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mangahive.app/contracts/manga_source_binding.schema.json",
+  "title": "MangaSourceBinding",
+  "description": "External source identity bound to a canonical manga. External IDs never become canonical IDs.",
+  "type": "object",
+  "required": ["mangaId", "sourceId", "externalMangaId"],
+  "additionalProperties": false,
+  "properties": {
+    "mangaId": { "type": "string", "minLength": 1, "maxLength": 256, "description": "Canonical manga id" },
+    "extensionId": { "type": ["string", "null"], "maxLength": 255 },
+    "sourceId": { "type": "string", "minLength": 1, "maxLength": 128 },
+    "externalMangaId": { "type": "string", "minLength": 1, "maxLength": 2048 }
+  }
+}

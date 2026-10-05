@@ -1,0 +1,57 @@
+[
+  {
+    "name": "Fake MangaDex Mirror",
+    "pkg": "eu.kanade.tachiyomi.extension.en.fakemangadex",
+    "apk": "https://example.com/apk/fakemangadex.apk",
+    "lang": "en",
+    "code": 100,
+    "version": "1.2.3",
+    "nsfw": 0
+  },
+  {
+    "name": "Obsolete Source",
+    "pkg": "eu.kanade.tachiyomi.extension.en.obsolete",
+    "apk": "https://example.com/apk/obsolete.apk",
+    "lang": [
+      "en"
+    ],
+    "code": 50,
+    "version": "0.9.0",
+    "obsolete": true
+  },
+  {
+    "name": "Multi Lang",
+    "pkg": "eu.kanade.tachiyomi.extension.all.multilang",
+    "apk": "https://example.com/apk/multi.apk",
+    "lang": [
+      "en",
+      "es",
+      "ja"
+    ],
+    "code": 200,
+    "version": "2.0.0",
+    "sources": [
+      {
+        "id": "en",
+        "name": "EN"
+      },
+      {
+        "id": "es",
+        "name": "ES"
+      }
+    ]
+  },
+  {
+    "name": "HTTP APK (unsafe)",
+    "pkg": "eu.kanade.tachiyomi.extension.en.httpapk",
+    "apk": "http://insecure.example.com/x.apk",
+    "lang": "en",
+    "version": "1.0.0"
+  },
+  {
+    "name": "Duplicate Package",
+    "pkg": "eu.kanade.tachiyomi.extension.en.fakemangadex",
+    "apk": "https://example.com/apk/dup.apk",
+    "version": "9.9.9"
+  }
+]

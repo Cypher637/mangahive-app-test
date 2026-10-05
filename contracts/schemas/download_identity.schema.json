@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mangahive.app/contracts/download_identity.schema.json",
+  "title": "DownloadIdentity",
+  "type": "object",
+  "required": ["canonicalMangaId", "canonicalChapterId", "sourceId", "remoteChapterId"],
+  "additionalProperties": false,
+  "properties": {
+    "canonicalMangaId": { "type": "string", "minLength": 1, "maxLength": 256 },
+    "canonicalChapterId": { "type": "string", "minLength": 1, "maxLength": 256 },
+    "extensionId": { "type": ["string", "null"], "maxLength": 255 },
+    "sourceId": { "type": "string", "minLength": 1, "maxLength": 128 },
+    "remoteMangaId": { "type": ["string", "null"], "maxLength": 2048 },
+    "remoteChapterId": { "type": "string", "minLength": 1, "maxLength": 2048 }
+  }
+}

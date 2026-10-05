@@ -1,0 +1,20 @@
+# Extra members/classes in MangaHive's host eu.kanade.tachiyomi.* implementation that are NOT in the tachiyomix 1.6.0 AAR.
+# Format: <exact line printed by verify-abi.sh after "EXTRA ">  | reason
+# Missing upstream members are never allowlistable. Only additions with no effect on what an extension compiled against
+# 1.6.0 can link to or observe belong here.
+eu.kanade.tachiyomi.network.NetworkHelper :: public eu.kanade.tachiyomi.network.NetworkHelper(); ()V | Kotlin `internal` host constructor (public in bytecode). Instances are stateless views over HostNetwork; a Java caller gets the same behaviour as NetworkHelper(Context).
+eu.kanade.tachiyomi.network.OkHttpExtensionsKt :: public static final java.lang.Object access$awaitInternal(okhttp3.Call, java.lang.StackTraceElement[], kotlin.coroutines.Continuation); (Lokhttp3/Call;[Ljava/lang/StackTraceElement;Lkotlin/coroutines/Continuation;)Ljava/lang/Object; | compiler-generated synthetic accessor for a private suspend helper
+eu.kanade.tachiyomi.network.OkHttpExtensionsKt$asObservable$1$arbiter$1 :: (class not in upstream) | compiler-generated lambda/anonymous class
+eu.kanade.tachiyomi.network.OkHttpExtensionsKt$awaitInternal$2$1 :: (class not in upstream) | compiler-generated lambda/anonymous class
+eu.kanade.tachiyomi.network.OkHttpExtensionsKt$awaitInternal$2$2$onResponse$1 :: (class not in upstream) | compiler-generated lambda/anonymous class
+eu.kanade.tachiyomi.network.OkHttpExtensionsKt$awaitInternal$2$2 :: (class not in upstream) | compiler-generated lambda/anonymous class
+eu.kanade.tachiyomi.network.OkHttpExtensionsKt$awaitSuccess$1 :: (class not in upstream) | compiler-generated coroutine continuation
+eu.kanade.tachiyomi.network.interceptor.RateLimitInterceptor :: (class not in upstream) | internal implementation of the public rateLimit()/rateLimitHost() builders (upstream stubs have no bodies)
+eu.kanade.tachiyomi.source.CatalogueSource$getMangaUpdate$2$asyncChapters$1 :: (class not in upstream) | compiler-generated coroutine lambda
+eu.kanade.tachiyomi.source.CatalogueSource$getMangaUpdate$2$asyncManga$1 :: (class not in upstream) | compiler-generated coroutine lambda
+eu.kanade.tachiyomi.source.CatalogueSource$getMangaUpdate$2 :: (class not in upstream) | compiler-generated coroutine lambda
+eu.kanade.tachiyomi.source.model.SChapterImpl :: (class not in upstream) | internal implementation returned by SChapter.create() (upstream stub throws)
+eu.kanade.tachiyomi.source.model.SMangaImpl :: (class not in upstream) | internal implementation returned by SManga.create() (upstream stub throws)
+eu.kanade.tachiyomi.source.online.HttpSource$special$$inlined$injectLazy$1$1 :: (class not in upstream) | compiler-generated Injekt type reference for `network by injectLazy()`
+eu.kanade.tachiyomi.source.online.HttpSource$special$$inlined$injectLazy$1 :: (class not in upstream) | compiler-generated Injekt type reference for `network by injectLazy()`
+eu.kanade.tachiyomi.source.online.HttpSourceKt :: (class not in upstream) | file facade holding an internal deprecation-message constant; no public members

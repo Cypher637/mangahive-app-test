@@ -1,0 +1,45 @@
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Local environment / secrets
+.env
+.env.*
+!.env.example
+*.local
+config/runtime-config.local.js
+
+# Node / tooling caches
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.npm/
+.cache/
+.parcel-cache/
+.vite/
+coverage/
+
+# GitHub Pages build output
+_pages/
+
+# Android / Gradle local build output
+android/.gradle/
+android/build/
+android/app/build/
+android/app/.cxx/
+android/local.properties
+*.apk
+*.aab
+*.keystore
+*.jks
+
+# Temporary / generated reports
+*.tmp
+*.temp
+*.log

@@ -1,0 +1,120 @@
+{
+  "version": "phase0.8",
+  "platform_baseline": {
+    "provider": "supabase",
+    "default_function_grantees": [
+      "anon",
+      "authenticated",
+      "service_role"
+    ],
+    "note": "Supabase installs ALTER DEFAULT PRIVILEGES in schema public granting EXECUTE on new functions to anon, authenticated and service_role (in addition to the PostgreSQL default of PUBLIC). The static verifier assumes this baseline; REVOKE FROM PUBLIC alone does NOT remove the anon grant. Must be confirmed against a live project (external freeze gate)."
+  },
+  "default_policy": {
+    "PUBLIC": "REVOKE",
+    "anon": "NO EXECUTE",
+    "authenticated": "GRANT EXECUTE"
+  },
+  "functions": [
+    "accept_friend_request",
+    "accept_message_request",
+    "add_group_member",
+    "add_post_comment",
+    "app_schema_version",
+    "block_user",
+    "cancel_friend_request",
+    "check_rate_limit",
+    "conversation_last_messages",
+    "create_group_conversation",
+    "create_post",
+    "decline_friend_request",
+    "decline_message_request",
+    "delete_declined_message_request",
+    "delete_message",
+    "delete_post",
+    "delete_room_message",
+    "edit_message",
+    "edit_room_message",
+    "get_my_profile",
+    "get_or_create_direct_conversation",
+    "get_public_profile",
+    "is_name_available",
+    "leave_conversation",
+    "mark_notifications_read",
+    "remove_friend",
+    "rename_group",
+    "search_profiles",
+    "send_friend_request",
+    "send_message",
+    "send_room_message",
+    "submit_report",
+    "sync_chapter_comment",
+    "toggle_follow",
+    "toggle_message_reaction",
+    "toggle_post_like",
+    "unblock_user",
+    "update_my_profile",
+    "update_post"
+  ],
+  "public_exceptions": [
+    {
+      "function": "app_schema_version",
+      "signature": "app_schema_version()",
+      "public_execute": true,
+      "auth": "public",
+      "kind": "read_only",
+      "reason": "Client schema-version probe; non-mutating; safe for anon and authenticated"
+    }
+  ],
+  "internal_helpers": {
+    "require_rate_limit": {
+      "PUBLIC": "REVOKE",
+      "anon": "REVOKE",
+      "authenticated": "REVOKE",
+      "rls_policy_use": "forbidden"
+    },
+    "room_is_accessible": {
+      "PUBLIC": "REVOKE",
+      "anon": "REVOKE",
+      "authenticated": "REVOKE",
+      "rls_policy_use": "forbidden"
+    }
+  },
+  "rls_predicates": {
+    "is_conversation_participant": {
+      "PUBLIC": "REVOKE",
+      "anon": "REVOKE",
+      "authenticated": "GRANT"
+    },
+    "can_view_profile": {
+      "PUBLIC": "REVOKE",
+      "anon": "REVOKE",
+      "authenticated": "GRANT"
+    },
+    "can_manage_participants": {
+      "PUBLIC": "REVOKE",
+      "anon": "REVOKE",
+      "authenticated": "GRANT"
+    }
+  },
+  "rls_policy_contract": {
+    "rule": "Policy expressions run as the caller: every public function a policy calls must be EXECUTE-able by every role the policy applies to. Internal helpers (client_callable=false) must never be called by a policy; inline the predicate instead. Granting a helper to authenticated is forbidden because schema public is exposed through PostgREST /rpc.",
+    "inlined_helpers": [
+      {
+        "helper": "room_is_accessible",
+        "policy": "room_messages/room_msg_select",
+        "source_table": "rooms",
+        "key_column": "id",
+        "policy_column": "room_id",
+        "table_privileges": {
+          "rooms": {
+            "authenticated": "SELECT",
+            "anon": "NONE",
+            "PUBLIC": "NONE"
+          }
+        },
+        "equivalence": "policy EXISTS conjuncts == room_is_accessible body conjuncts == rooms_select USING conjuncts (+ key equality)",
+        "why_not_grant": "EXECUTE to authenticated would expose room_is_accessible via supabase.rpc()"
+      }
+    ]
+  }
+}

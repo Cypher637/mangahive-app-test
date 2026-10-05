@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mangahive.app/contracts/rate_limit_result.schema.json",
+  "title": "RateLimitResult",
+  "type": "object",
+  "properties": {
+    "allowed": {
+      "type": "boolean"
+    },
+    "code": {
+      "type": "string"
+    },
+    "retryAfterSeconds": {
+      "type": "integer"
+    },
+    "remaining": {
+      "type": "integer"
+    }
+  },
+  "required": [
+    "allowed"
+  ],
+  "additionalProperties": false
+}

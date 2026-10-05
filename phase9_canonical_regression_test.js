@@ -1,0 +1,23 @@
+const fs=require('fs');
+const html=fs.readFileSync('index.html','utf8');
+const cache=fs.readFileSync('android/mihon/src/main/java/app/mangahive/mihon/runtime/SourceDataCache.kt','utf8');
+let failed=0;
+function ok(name,cond){if(cond) console.log('PASS: '+name); else {console.error('FAIL: '+name); failed++;}}
+ok('canonical model version exists',/CANONICAL_MODEL_VERSION\s*=\s*1/.test(html));
+ok('canonical manga id preserves existing series id',/canonicalId=String\(s\.canonicalId\|\|s\.id\|\|uid\(\)\)/.test(html));
+ok('source identity includes extension/source/remote',/canonicalSourceBindingKey\(extensionId, sourceId, remoteId\)/.test(html));
+ok('chapter canonical identity exists',/canonicalChapterId\(seriesId, identityKey\)/.test(html));
+ok('exact binding match is automatic',/state:"EXACT".*existing-source-binding/.test(html));
+ok('title-only match remains possible',/state:"POSSIBLE_MATCH"/.test(html));
+ok('canonical import persistence is used',/persistCanonicalSeries\(series\)/.test(html));
+ok('startup canonical migration exists',/migrateCanonicalState\(\)/.test(html));
+ok('source selector exists',/data-action="select-series-source"/.test(html));
+ok('selected source is validated before activation',/activateSeriesSource\(series, bindingKey\)/.test(html));
+ok('automatic fallback defaults off',/autoSourceFallback:false/.test(html));
+ok('fallback is opt-in',/autoSourceFallback === true/.test(html));
+ok('source fallback is user-visible',/Source unavailable — trying/.test(html));
+ok('cache cleanup reads namespace sidecar',/\.key/.test(cache) && /substringBefore\("\\u001f"/.test(cache));
+ok('cache cleanup deletes sidecar',/keyFile\.delete\(\)/.test(cache));
+ok('no web eval',!/\beval\s*\(/.test(html));
+ok('no new Function',!/new\s+Function\s*\(/.test(html));
+if(failed) process.exit(1); console.log('\nPhase 9 canonical regression checks passed.');
